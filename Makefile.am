@@ -15,7 +15,7 @@ BITCOIN_CLI_BIN=$(top_builddir)/src/zcore-cli$(EXEEXT)
 BITCOIN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
 
 OSX_APP=ZCore-Qt.app
-OSX_VOLNAME = $(subst $(space),-,$(PACKAGE_NAME))
+OSX_VOLNAME=ZCore
 OSX_DMG = $(OSX_VOLNAME).dmg
 OSX_BACKGROUND_IMAGE=background.tiff
 OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
