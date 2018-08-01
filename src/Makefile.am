@@ -318,7 +318,13 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/sph_skein.h \
   crypto/sph_types.h \
   crypto/sha512.cpp \
-  crypto/sha512.h
+  crypto/sha512.h \
+  crypto/Lyra2.h \
+  crypto/Lyra2.c \
+  crypto/Lyra2Z.h \
+  crypto/Lyra2Z.c \
+  crypto/Sponge.c \
+  crypto/Sponge.h
 
 # common: shared between zcored, and zcore-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)

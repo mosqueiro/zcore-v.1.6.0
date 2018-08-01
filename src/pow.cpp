@@ -29,8 +29,8 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const Conse
 
     uint64_t pastSecondsMin = params.nPowTargetTimespan * 0.025;
     uint64_t pastSecondsMax = params.nPowTargetTimespan * 7;
-    uint64_t PastBlocksMin = pastSecondsMin / params.nPowTargetSpacing;
-    uint64_t PastBlocksMax = pastSecondsMax / params.nPowTargetSpacing;
+    uint64_t PastBlocksMin = pastSecondsMin / params.GetPowTargetSpacing(BlockLastSolved->nHeight + 1);
+    uint64_t PastBlocksMax = pastSecondsMax / params.GetPowTargetSpacing(BlockLastSolved->nHeight + 1);
 
     if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || (uint64_t)BlockLastSolved->nHeight < PastBlocksMin) { return UintToArith256(params.powLimit).GetCompact(); }
 
@@ -49,7 +49,7 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const Conse
         PastDifficultyAveragePrev = PastDifficultyAverage;
 
         PastRateActualSeconds = BlockLastSolved->GetBlockTime() - BlockReading->GetBlockTime();
-        PastRateTargetSeconds = params.nPowTargetSpacing * PastBlocksMass;
+        PastRateTargetSeconds = params.GetPowTargetSpacing(BlockLastSolved->nHeight + 1) * PastBlocksMass;
         PastRateAdjustmentRatio = double(1);
         if (PastRateActualSeconds < 0) { PastRateActualSeconds = 0; }
         if (PastRateActualSeconds != 0 && PastRateTargetSeconds != 0) {
@@ -92,7 +92,7 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consens
     arith_uint256 PastDifficultyAverage;
     arith_uint256 PastDifficultyAveragePrev;
 
-    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
+    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin || BlockLastSolved->nHeight == params.nPowDGWHeight) {
         return UintToArith256(params.powLimit).GetCompact();
     }
 
@@ -136,24 +136,59 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consens
     return bnNew.GetCompact();
 }
 
-unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
-{
-    unsigned int retarget = DIFF_DGW;
+unsigned int static DarkGravityWave_New(const CBlockIndex* pindexLast, const Consensus::Params& params) {
+    /* current difficulty formula, dash - DarkGravity v3, written by Evan Duffield - evan@dash.org */
+    const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+    int64_t nPastBlocks = params.GetDGWPastBlocks(pindexLast->nHeight);
 
-    // mainnet/regtest share a configuration 
-    if (Params().NetworkIDString() == CBaseChainParams::MAIN || Params().NetworkIDString() == CBaseChainParams::REGTEST) {
-        if (pindexLast->nHeight + 1 >= 8000) retarget = DIFF_DGW;
-        else retarget = DIFF_BTC;
-    // testnet -- we want a lot of coins in existance early on 
-    } else {
-        if (pindexLast->nHeight + 1 >= 3000) retarget = DIFF_DGW;
-        else retarget = DIFF_BTC;
+    // make sure we have at least (nPastBlocks + 1) blocks, otherwise just return powLimit
+    if (!pindexLast || pindexLast->nHeight < nPastBlocks || pindexLast->nHeight == params.nPowDGW3Height) {
+        return bnPowLimit.GetCompact();
     }
 
-    // Default Bitcoin style retargeting
-    if (retarget == DIFF_BTC)
-    {
-        unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
+    const CBlockIndex *pindex = pindexLast;
+    arith_uint256 bnPastTargetAvg;
+
+    for (unsigned int nCountBlocks = 1; nCountBlocks <= nPastBlocks; nCountBlocks++) {
+        arith_uint256 bnTarget = arith_uint256().SetCompact(pindex->nBits);
+        if (nCountBlocks == 1) {
+            bnPastTargetAvg = bnTarget;
+        } else {
+            // NOTE: that's not an average really...
+            bnPastTargetAvg = (bnPastTargetAvg * nCountBlocks + bnTarget) / (nCountBlocks + 1);
+        }
+
+        if(nCountBlocks != nPastBlocks) {
+            assert(pindex->pprev); // should never fail
+            pindex = pindex->pprev;
+        }
+    }
+
+    arith_uint256 bnNew(bnPastTargetAvg);
+
+    int64_t nActualTimespan = pindexLast->GetBlockTime() - pindex->GetBlockTime();
+    // NOTE: is this accurate? nActualTimespan counts it for (nPastBlocks - 1) blocks only...
+    int64_t nTargetTimespan = nPastBlocks * params.GetPowTargetSpacing(pindex->nHeight);
+
+    if (nActualTimespan < nTargetTimespan/3)
+        nActualTimespan = nTargetTimespan/3;
+    if (nActualTimespan > nTargetTimespan*3)
+        nActualTimespan = nTargetTimespan*3;
+
+    // Retarget
+    bnNew *= nActualTimespan;
+    bnNew /= nTargetTimespan;
+
+    if (bnNew > bnPowLimit) {
+        bnNew = bnPowLimit;
+    }
+
+    return bnNew.GetCompact();
+}
+
+unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+{
+	unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
 
         // Genesis block
         if (pindexLast == NULL)
@@ -167,7 +202,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
                 // Special difficulty rule for testnet:
                 // If the new block's timestamp is more than 2* 2.5 minutes
                 // then allow mining of a min-difficulty block.
-                if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*2)
+                if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.GetPowTargetSpacing(pindexLast->nHeight+1)*2)
                     return nProofOfWorkLimit;
                 else
                 {
@@ -188,21 +223,6 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         assert(pindexFirst);
 
        return CalculateNextWorkRequired(pindexLast, pindexFirst->GetBlockTime(), params);
-    }
-
-    // Retarget using Kimoto Gravity Wave
-    else if (retarget == DIFF_KGW)
-    {
-        return KimotoGravityWell(pindexLast, params);
-    }
-
-    // Retarget using Dark Gravity Wave 3
-    else if (retarget == DIFF_DGW)
-    {
-        return DarkGravityWave(pindexLast, params);
-    }
-
-    return DarkGravityWave(pindexLast, params);
 }
 
 // for DIFF_BTC only!
@@ -238,6 +258,20 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     LogPrintf("After:  %08x  %s\n", bnNew.GetCompact(), bnNew.ToString());
 
     return bnNew.GetCompact();
+}
+
+unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+{
+    // Most recent algo first
+    if (pindexLast->nHeight + 1 >= params.nPowDGWHeight) {
+        return DarkGravityWave(pindexLast, params);
+    }
+    else if (pindexLast->nHeight + 1 >= params.nPowDGW3Height) {
+        return DarkGravityWave_New(pindexLast, params);
+    }
+    else {
+        return GetNextWorkRequiredBTC(pindexLast, pblock, params);
+    }
 }
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)

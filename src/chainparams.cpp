@@ -87,10 +87,12 @@ public:
         consensus.BIP34Height = 227931; // FIX
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8"); // FIX
         consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
-        consensus.nPowTargetTimespan =  40 * 1.5 * 60; // ZCore: 1 hour, 45 blocks
-        consensus.nPowTargetSpacing =  1.5 * 60;      // ZCore: 90 seconds
+        consensus.nPowTargetTimespan =  40 * 1.5 * 60; // ZCore: 1 hour, 45 blocks  // used only for KGW and Bitcoin Diff
+        consensus.nPowTargetSpacing =  1.5 * 60;      // ZCore: 90 seconds // soft change to nPowAgo2018TargetSpacing after mPowDGWReconfigureAgo2018Height
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
+        consensus.nPowDGWHeight = 8000;
+	consensus.nPowDGW3Height = 135000;  //New retarget
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -101,6 +103,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1502280000; // Aug 9th, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1533816000; // Aug 9th, 2018
+
+        // Consensus Update Ago 2018
+        consensus.mPowDGWReconfigureAgo2018Height = 135000;
+        consensus.nPowAgo2018TargetSpacing = 1.5 * 60;
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -195,7 +201,7 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 262800;
-        consensus.nMasternodePaymentsStartBlock = 10000; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        consensus.nMasternodePaymentsStartBlock = 750; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
         consensus.nMasternodePaymentsIncreaseBlock = 46000;
         consensus.nMasternodePaymentsIncreasePeriod = 576;
         consensus.nInstantSendKeepLock = 6;
@@ -214,10 +220,12 @@ public:
         consensus.BIP34Height = 21111; // FIX
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8"); // FIX
         consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
-        consensus.nPowTargetTimespan = 60 * 60; // ZCore: 1 hour
+        consensus.nPowTargetTimespan = 60 * 60; // ZCore: 1 hour  // used only for KGW and Bitcoin Diff
         consensus.nPowTargetSpacing = 2 * 60;   // ZCore: 1 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
+	consensus.nPowDGWHeight = 512;
+	consensus.nPowDGW3Height = 550;  //New retarget
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -228,6 +236,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1502280000; // Aug 9th, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1533816000; // Aug 9th, 2018
+
+        // Consensus Update Ago 2018
+        consensus.mPowDGWReconfigureAgo2018Height = 550;
+        consensus.nPowAgo2018TargetSpacing = 2 * 60;
 
         pchMessageStart[0] = 0x1a;
         pchMessageStart[1] = 0x11;
@@ -278,10 +290,10 @@ public:
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
             (0, uint256S("0x000001d77b6993ef8cf9149b6a950cc73802c37b967bbdeefef7ef4825e2abd9")),
-                1520732187, // * UNIX timestamp of last checkpoint block
-                1,       // * total number of transactions between genesis and last checkpoint
+            	1520732187, // * UNIX timestamp of last checkpoint block
+            	1,       // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
-                500        // * estimated number of transactions per day after checkpoint
+            	500        // * estimated number of transactions per day after checkpoint
         };
 
     }
@@ -315,10 +327,12 @@ public:
         consensus.BIP34Height = -1; // BIP34 has not necessarily activated on regtest
         consensus.BIP34Hash = uint256();
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 60 * 60; // ZCore: 1 hour
+        consensus.nPowTargetTimespan = 60 * 60; // ZCore: 1 hour // used only for KGW and Bitcoin Diff
         consensus.nPowTargetSpacing = 2 * 60; // ZCore: 2 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
+	consensus.nPowDGWHeight = 100;
+	consensus.nPowDGW3Height = 200;  //New retarget
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -327,6 +341,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
+
+        // Consensus Update Apr 2018
+        consensus.mPowDGWReconfigureAgo2018Height = 1;
+        consensus.nPowAgo2018TargetSpacing = 2 * 60;
 
         pchMessageStart[0] = 0x1a;
         pchMessageStart[1] = 0x12;

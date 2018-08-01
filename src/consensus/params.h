@@ -71,7 +71,29 @@ struct Params {
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
+    int nPowDGWHeight;
+    int nPowDGW3Height;
+    uint32_t nLyra2zTimestamp;
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
+
+    int mPowDGWReconfigureAgo2018Height;
+    int64_t nPowAgo2018TargetSpacing;
+    int64_t GetPowTargetSpacing(int blockHeight) const {
+        if (blockHeight >= mPowDGWReconfigureAgo2018Height) {
+            return nPowAgo2018TargetSpacing;
+        } else {
+            return nPowTargetSpacing;
+        }
+    }
+    int nAgo2018DGWPastBlocks;
+    int64_t GetDGWPastBlocks(int blockHeight) const {
+        if (blockHeight >= mPowDGWReconfigureAgo2018Height) {
+            return 30;
+        } else {
+            return 24;
+        }
+    }
+
 };
 } // namespace Consensus
 

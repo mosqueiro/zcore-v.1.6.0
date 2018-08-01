@@ -1,5 +1,5 @@
 ---
-name: "zcore-linux-1.5.3"
+name: "zcore-linux-1.6.0"
 enable_cache: true
 suites:
 - "trusty"
@@ -28,7 +28,7 @@ packages:
 - "ca-certificates"
 - "python"
 remotes:
-- "url": "https://github.com/mosqueiro/zcore.git"
+- "url": "https://github.com/mosqueiro/zcore-v.1.6.0.git"
   "dir": "zcore"
 files: []
 script: |

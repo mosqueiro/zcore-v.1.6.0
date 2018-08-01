@@ -22,4 +22,6 @@ enum {
     LOCKTIME_MEDIAN_TIME_PAST = (1 << 1),
 };
 
+static const int LYRA2Z_TIMESTAMP = 1535760000; //09/01/2018 @ 12:00am (UTC)
+
 #endif // BITCOIN_CONSENSUS_CONSENSUS_H
