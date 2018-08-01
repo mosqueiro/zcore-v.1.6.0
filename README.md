@@ -11,9 +11,9 @@ For more information:
 
 Auto install
 ----------------
-To compile and install ZCore, you can use the [install script](https://zcore.ch/install.sh) using cURL (_tested with Ubuntu 16_):
+To compile and install ZCore, you can use the [install script](https://raw.githubusercontent.com/zcore-coin/zcore-source/master/install.sh) using cURL (_tested with Ubuntu 16_):
 ```
-sudo curl -o- https://zcore.ch/install.sh | bash
+sudo curl -o- https://raw.githubusercontent.com/zcore-coin/zcore-source/master/install.sh | bash
 ```
 
 License

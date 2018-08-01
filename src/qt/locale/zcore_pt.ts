@@ -320,7 +320,7 @@
     </message>
     <message>
         <source>&amp;Show / Hide</source>
-        <translation>&amp;Exbir / Ocultar</translation>
+        <translation>&amp;Exibir / Ocultar</translation>
     </message>
     <message>
         <source>Show or hide the main Window</source>
