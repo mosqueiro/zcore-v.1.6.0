@@ -1,1 +1,0 @@
-./configure --with-gui=no --disable-tests --disable-gui-tests
