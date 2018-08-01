@@ -1,6 +1,6 @@
 ZCore [ZCR]
 ----------------
-![zcore logo](https://zcore.ch/github/logo.png)
+![zcore logo](https://zcore.ch/github/logow.png)
 
 What is ZCore?
 ----------------
