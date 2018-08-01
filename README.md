@@ -1,9 +1,8 @@
-ZCore version 1.5.2
-===============================
+ZCore [ZCR]
+----------------
+![zcore logo](https://zcore.ch/github/logo.png)
 
-![zcore logo](https://zcore.ch/zcore100.png)
-
-About
+What is ZCore?
 ----------------
 
 ZCore is an experimental new digital currency that enables anonymous, instant
@@ -15,7 +14,6 @@ source software which enables the use of this currency.
 For more information:
 
 * https://zcore.cash
-* https://t.me/ZCoreCrypto
 
 Auto install
 ----------------
@@ -23,3 +21,18 @@ To compile and install ZCore, you can use the [install script](https://zcore.ch/
 ```
 sudo curl -o- https://zcore.ch/install.sh | bash
 ```
+
+License
+-------
+
+XCore is released under the terms of the MIT license. See [COPYING](COPYING) for more
+information or see https://opensource.org/licenses/MIT.
+
+Development Process
+-------------------
+
+The default branch is regularly built and tested, but is not guaranteed to be
+completely stable. [Tags](https://github.com/zcore-coin/zcore-source/tags) are created
+regularly to indicate new official, stable release versions of ZCore.
+
+The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
