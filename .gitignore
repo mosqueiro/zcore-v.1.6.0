@@ -9,9 +9,9 @@ zcore_gui_db48.sh
 zcore_gui_osx.sh
 object_script.zcore-qt.Debug
 object_script.zcore-qt.Release
-fix-xcb-include-order.patch
-mingw-uuidof.patch
-pidlist_absolute.patch
+#fix-xcb-include-order.patch
+#mingw-uuidof.patch
+#pidlist_absolute.patch
 
 *.sublime-project
 *.sublime-workspace
