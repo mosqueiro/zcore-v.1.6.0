@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>Encrypt wallet</source>
-        <translation>Cifrar carteira</translation>
+        <translation>Criptografar carteira</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
@@ -157,11 +157,11 @@
     </message>
     <message>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Esta operação necessita da sua palavra-passe para decifrar a carteira.</translation>
+        <translation>Esta operação necessita da sua palavra-passe para decriptografar a carteira.</translation>
     </message>
     <message>
         <source>Decrypt wallet</source>
-        <translation>Decifrar carteira</translation>
+        <translation>Decriptografar carteira</translation>
     </message>
     <message>
         <source>Change passphrase</source>
@@ -177,11 +177,11 @@
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ZCR&lt;/b&gt;!</source>
-        <translation>Atenção: Se cifrar a carteira e perder a palavra-passe, irá &lt;b&gt;PERDER TODAS AS SUAS MOEDAS ZCR&lt;/b&gt;!</translation>
+        <translation>Atenção: Se criptografar a carteira e perder a palavra-passe, irá &lt;b&gt;PERDER TODAS AS SUAS MOEDAS ZCR&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
-        <translation>Tem a certeza que quer cifrar a carteira?</translation>
+        <translation>Tem a certeza que quer criptografar a carteira?</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
@@ -189,7 +189,7 @@
     </message>
     <message>
         <source>ZCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your zcores from being stolen by malware infecting your computer.</source>
-        <translation>O cliente ZCore irá fechar para finalizar o processo de cifra. Lembre-se que cifrar a sua carteira não consegue proteger totalmente as suas zcores contra roubos feitos por malware presente no seu computador.</translation>
+        <translation>O cliente ZCore irá fechar para finalizar o processo de cifra. Lembre-se que criptografar a sua carteira não consegue proteger totalmente as suas zcores contra roubos feitos por malware presente no seu computador.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -213,7 +213,7 @@
     </message>
     <message>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation>A palavra-passe fornecida para decifrar a carteira está incorrecta.</translation>
+        <translation>A palavra-passe fornecida para decriptografar a carteira está incorrecta.</translation>
     </message>
     <message>
         <source>Wallet decryption failed</source>
@@ -320,7 +320,7 @@
     </message>
     <message>
         <source>&amp;Show / Hide</source>
-        <translation>&amp;Mostar / Esconder</translation>
+        <translation>&amp;Exbir / Ocultar</translation>
     </message>
     <message>
         <source>Show or hide the main Window</source>
@@ -328,7 +328,7 @@
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Cifrar Carteira</translation>
+        <translation>&amp;Criptografar Carteira</translation>
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
