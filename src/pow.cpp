@@ -92,7 +92,7 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consens
     arith_uint256 PastDifficultyAverage;
     arith_uint256 PastDifficultyAveragePrev;
 
-    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin || BlockLastSolved->nHeight == params.nPowDGWHeight) {
+    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
         return UintToArith256(params.powLimit).GetCompact();
     }
 
@@ -262,6 +262,14 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
+    //Reset diff in Testnet/Regtest before DGW
+    if (Params().NetworkIDString() == CBaseChainParams::TESTNET || 
+        Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+     if (pindexLast->nHeight == params.nPowDGWHeight) {
+       return UintToArith256(params.powLimit).GetCompact();
+     }
+    }
+
     // Most recent algo first
     if (pindexLast->nHeight + 1 >= params.nPowDGWHeight) {
         return DarkGravityWave(pindexLast, params);
@@ -269,9 +277,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     else if (pindexLast->nHeight + 1 >= params.nPowDGW3Height) {
         return DarkGravityWave_New(pindexLast, params);
     }
-    else {
-        return GetNextWorkRequiredBTC(pindexLast, pblock, params);
-    }
+    
+    return GetNextWorkRequiredBTC(pindexLast, pblock, params);
 }
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
